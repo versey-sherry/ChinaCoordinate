@@ -56,10 +56,11 @@ gcjtowgs <- function(coordinates){
 
 #from GCJ02 to WGS84 using Bisection method
 #more accurate but more computation
-gcjtowgs_acc <- function(gcjlat, gcjlon){
+gcjtowgs_acc <- function(coordinates){
+  gcjlat <- coordinates[1]
+  gcjlon <- coordinates[2]
   if (inchina(gcjlat, gcjlon)){
     init_delta <- 0.1
-    threshold <- 0.000000001
     mlat <- gcjlat - init_delta
     mlon <- gcjlon - init_delta
     plat <- gcjlat + init_delta
@@ -69,24 +70,23 @@ gcjtowgs_acc <- function(gcjlat, gcjlon){
     for (a in 1:10000){
       wgslat <- (mlat + plat)/2
       wgslon <- (mlon + plon)/2
-      templat <- wgstogcj(wgslat, wgslon)[1]
-      templon <- wgstogcj(wgslat, wgslon)[2]
+      templat <- wgstogcj(c(wgslat, wgslon))[1]
+      templon <- wgstogcj(c(wgslat, wgslon))[2]
       ilat <- templat - gcjlat
       ilon <- templon - gcjlon
-      if (ilat >= 0){
-        plat <- wgslat
-      }else{
-        mlat <- wgslat
-      }
-      if (ilon >= 0){
-        plon <- wgslon
-      }else{
-        mlon <- wgslon
-      }
-      a = a+1
-      wgs <- c(wgslat = wgslat, wgslon = wgslon)
+        if (ilat > 0){
+          plat <- wgslat
+        }else{
+          mlat <- wgslat
+        }
+        if (ilon > 0){
+          plon <- wgslon
+        }else{
+          mlon <- wgslon
+        }
+        a = a+1
+        wgs <- c(wgslat = wgslat, wgslon = wgslon)
     }
-
   }else{
     wgs <- c(wgslat = gcjlat, wgslon = gcjlon)
   }
@@ -94,7 +94,9 @@ gcjtowgs_acc <- function(gcjlat, gcjlon){
 }
 
 #from WGS84 to GCJ02
-wgstogcj <- function(wgslat, wgslon){
+wgstogcj <- function(coordinates){
+  wgslat <- coordinates[1]
+  wgslon <- coordinates[2]
   if(inchina(wgslat, wgslon)){
     dlat <- transformlat(wgslon - 105, wgslat - 35)
     dlon <- transformlon(wgslon - 105, wgslat - 35)
@@ -111,7 +113,9 @@ wgstogcj <- function(wgslat, wgslon){
 }
 
 #from BD09 to GCJ02
-bdtogcj <- function(bdlat, bdlon){
+bdtogcj <- function(coordinates){
+  bdlat <- coordinates[1]
+  bdlon <- coordinates[2]
   x <- bdlon - 0.0065
   y <- bdlat - 0.006
   z <- sqrt(x*x +y*y) - 0.00002*sin(y*x_PI)
@@ -121,7 +125,9 @@ bdtogcj <- function(bdlat, bdlon){
 }
 
 #from GCJ02 to BD09
-gcjtobd <- function(gcjlat, gcjlon){
+gcjtobd <- function(coordinates){
+  gcjlat <- coordinates[1]
+  gcjlon <- coordinates[2]
   x <- gcjlon
   y <- gcjlat
   z <- sqrt(x*x + y*y) + 0.00002*sin(y*x_PI)
@@ -131,13 +137,15 @@ gcjtobd <- function(gcjlat, gcjlon){
 }
 
 #from BD09 to WGS84
-bdtowgs <- function(bdlat, bdlon){
+bdtowgs <- function(coordinates){
+  bdlat <- coordinates[1]
+  bdlon <- coordinates[2]
   if (inchina(bdlat, bdlon)){
     #from BD09 to GCJ02
-    templat <- bdtogcj(bdlat, bdlon)[1]
-    templon <- bdtogcj(bdlat, bdlon)[2]
+    templat <- bdtogcj(coordinates)[1]
+    templon <- bdtogcj(coordinates)[2]
     #from GCJ02 to WGS84
-    wgs <- c(gcjtowgs(templat, templon)[1], gcjtowgs(templat, templon)[2])
+    wgs <- c(gcjtowgs(c(templat, templon))[1], gcjtowgs(c(templat, templon))[2])
     names(wgs) <- c("wgslat", "wgslon")
   }else{
     wgs <- c(wgslat = bdlat, wgslon = bdlon)
@@ -146,13 +154,15 @@ bdtowgs <- function(bdlat, bdlon){
 }
 
 #from WGS84 to BD09
-wgstobd <- function(wgslat, wgslon){
+wgstobd <- function(coordinates){
+  wgslat <- coordinates[1]
+  wgslon <- coordinates[2]
   if(inchina(wgslat, wgslon)){
     #from WGS84 to GCJ02
-    templat <- wgstogcj(wgslat, wgslon)[1]
-    templon <- wgstogcj(wgslat, wgslon)[2]
+    templat <- wgstogcj(coordinates)[1]
+    templon <- wgstogcj(coordinates)[2]
     #from GCJ02 to BD09
-    bd <- c(gcjtobd(templat, templon)[1], gcjtobd(templat, templon)[2])
+    bd <- c(gcjtobd(c(templat, templon))[1], gcjtobd(c(templat, templon))[2])
     names(bd) <- c("bdlat", "bdlon")
   }else{
     bd <- c(bdlat = wgslat, bdlon = wgslon)
