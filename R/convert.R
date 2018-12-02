@@ -31,17 +31,14 @@ transformlon <- function(x, y){
 #http://www.cnblogs.com/Aimeast/archive/2012/08/09/2629614.html
 inchina <- function(lat, lon){
   #extreme points source: https://en.wikipedia.org/wiki/List_of_extreme_points_of_China
-  if (lon >=73.816667 & lon <= 134.75){
-    return(TRUE)
-  }else if (lat >=20.333333 & lat <= 53.55){
-    return(TRUE)
-  }else{
-    return(FALSE)
-  }
+  return(ifelse((lat >=20.333333 & lat <= 53.55) &
+           (lon >=73.816667 & lon <= 134.75), TRUE, FALSE))
 }
 
 #from GCJ02 to WGS84
-gcjtowgs <- function(gcjlat, gcjlon){
+gcjtowgs <- function(coordinates){
+  gcjlat <- coordinates[1]
+  gcjlon <- coordinates[2]
   if (inchina(gcjlat, gcjlon)){
     dlat <- transformlat(gcjlon - 105, gcjlat -35)
     dlon <- transformlon(gcjlon - 105, gcjlat -35)
