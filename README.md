@@ -12,11 +12,15 @@ Here are the explanations for GCJO2 and BD09 from Wekipedia:
 
 This package uses pure arithmetic methods to perform the conversion and the current available conversion are: GCJ02 from/to WGS84, BD09 from/to WGS84, CGJ02 from/to BD09 and GCJ02 to WGS84 accurate. GCJ02 to WGS84 accurate uses [bisection method](https://en.wikipedia.org/wiki/Bisection_method) since WGS84 to GCJ02 function is continuous and monotonically increasing within China.
 
+这个R package提供火星坐标系(GCJ02)和百度坐标系(BD09)和地球坐标系(WGS84)的相互转换。这个解决方案不需要连接任何API，其中GCJ02转换到WGS84有两个版本，一个是普通的计算版本gcjtowgs()，另外一个是利用二分法更加精确的版本gcjtowgs_acc()。
+
 
 ## Getting Started
 
 ### Installing
 Simply install devtools package and use install_github() to install this package.
+
+安装方法如下：
 
 ```
 install.packages("devtools"))
@@ -27,6 +31,8 @@ devtools::install_github("versey-sherry/ChinaCoordinate")
 ## Example
 
 **From GCJ02 to BD09 or WGS84**
+
+火星坐标系转百度坐标系或地球坐标系
 
 GCJ02 coordinates eg. c(39.8673, 116.366)
 
@@ -40,6 +46,8 @@ gcjtowgs(c(39.8673, 116.366))
 gcjtowgs_acc(c(39.8673, 116.366))
 ```
 **From BD09 to GCJ02 or WGS84**
+
+百度坐标系转火星坐标系或地球坐标系
 
 Accuate conversion could be done by first converting BD09 to GCJ02 and then perform gcjtowgs_acc().
 
@@ -55,6 +63,8 @@ bdtowgs(c(39.806602, 116.64099))
 
 **From WGS84 to BD09 or GCJ02**
 
+地球坐标系转百度坐标系或火星坐标系
+
 WGS84 coordinates eg. c(39.8659, 116.3597)
 
 ```
@@ -67,6 +77,8 @@ wgstogcj(c(39.8659, 116.3597))
 **Data frame Conversion**
 
 For example, you have a data frame of GCJ02 coordinates like below called df, and you want to convert these coordinates to WGS84 coordinates.
+
+如果需要转换的坐标在数据框(data frame)里面，请使用按行计算的apply()，或其他类似函数，例子如下：
 
 Location | Lat | Lon 
 ------------ | ------------- | -------------  
@@ -95,4 +107,5 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 ## Acknowledgments
 
 * Algorithm adpated from [this post](https://segmentfault.com/a/1190000009041866)
+* [Online tool](https://tool.lu/coordinate/) for coordinate checking
 * [README.md template](https://gist.github.com/PurpleBooth/109311bb0361f32d87a2)
