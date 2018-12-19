@@ -78,7 +78,9 @@ wgstogcj(c(39.8659, 116.3597))
 
 For example, you have a data frame of GCJ02 coordinates like below called df, and you want to convert these coordinates to WGS84 coordinates.
 
-如果需要转换的坐标在数据框(data frame)里面，请使用按行计算的apply()，或其他类似函数，例子如下：
+Please make sure there is no NA in the coordinates or there will be an error.
+
+如果需要转换的坐标在数据框(data frame)里面，请使用按行计算的apply()，或其他类似函数，请注意坐标不要有NA, 例子如下：
 
 Location | Lat | Lon 
 ------------ | ------------- | -------------  
@@ -89,7 +91,7 @@ Location4 | 39.473 | 117.489
 
 ```
 library(ChinaCoordinate)
-apply(df, 1, gcjtowgs)
+apply(df[c("Lat", "Lon")], 1, gcjtowgs)
 ```
 
 ## Contributing
