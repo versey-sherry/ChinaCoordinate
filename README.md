@@ -23,7 +23,7 @@ Simply install devtools package and use install_github() to install this package
 安装方法如下：
 
 ```
-install.packages("devtools"))
+install.packages("devtools")
 library(devtools)
 devtools::install_github("versey-sherry/ChinaCoordinate")
 ```
